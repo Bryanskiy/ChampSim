@@ -26,7 +26,7 @@
             "dispatch_latency": 1,
             "schedule_latency": 0,
             "execute_latency": 0,
-            "branch_predictor": "GAp",
+            "branch_predictor": "GAg",
             "btb": "basic_btb"
         }
     ],
