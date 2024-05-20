@@ -1,5 +1,6 @@
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
+import matplotlib.pyplot as plt
 from subprocess import CalledProcessError
 import os
 
@@ -38,3 +39,38 @@ def run_traces(dir, output_dir, cwd, warmup, instrs_count):
                     run_trace, f"{dir}/{file}", res_file, cwd, warmup, instrs_count
                 )
     os.chdir(current_cwd)
+
+
+def bar_plot(
+    ax,
+    data,
+    title,
+    xticks=[],
+    colors=None,
+    total_width=0.8,
+    single_width=1,
+    legend=True,
+):
+    if colors is None:
+        colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+    n_bars = len(data)
+    bar_width = total_width / n_bars
+    bars = []
+    for i, (name, values) in enumerate(data.items()):
+        x_offset = (i - n_bars / 2) * bar_width + bar_width * 1.5
+
+        for x, y in enumerate(values):
+            bar = ax.bar(
+                x + x_offset,
+                y,
+                width=bar_width * single_width,
+                color=colors[i % len(colors)],
+            )
+
+        bars.append(bar[0])
+
+    plt.xticks([r + bar_width for r in range(len(xticks))], xticks, rotation=90)
+
+    if legend:
+        ax.legend(bars, data.keys())
+    plt.title(title)
